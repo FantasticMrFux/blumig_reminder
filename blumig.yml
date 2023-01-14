@@ -1,0 +1,58 @@
+esphome:
+  name: blumenkalender
+
+esp8266:
+  board: nodemcuv2
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+wifi:
+  ssid: "LesDifferentes"
+  password: !secret wifi_pw
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Blumenkalender Fallback Hotspot"
+    password: "P9ZvWeqS43kH"
+
+captive_portal:
+
+globals:
+   - id: seconds
+     type: int
+     restore_value: no
+     initial_value: '0'
+    
+display:
+  platform: tm1637
+  clk_pin: D6
+  dio_pin: D5
+  update_interval: 1000ms
+  lambda: |-
+      static float days = 0.0;
+      id(seconds)++;
+      days = id(seconds) / (60 * 60 * 24);
+      ESP_LOGD("days", "d: %2.0f", days);
+      ESP_LOGD("seconds", "s: %2.0i", id(seconds));
+      it.printf(" d.%2.0f", days);
+
+binary_sensor:
+  - platform: gpio
+    pin: 
+      number: D1
+      mode:
+        input: true
+        pullup: true
+    name: "Button"
+    on_press:
+      then:
+        lambda: |-
+          id(seconds) = 0;
