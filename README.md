@@ -4,10 +4,14 @@ plants had been watered.
 
 ### Some commands
 
+Allow hardware access
+
+`sudo chmod 666 /dev/ttyUSB0`
+
 Load programm to chip
 
-`esphome run water.yml`
+`esphome run blumig.yml`
 
 See logs
 
-`esphome logs water.yml`
+`esphome logs blumig.yml`
